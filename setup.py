@@ -2,6 +2,12 @@ import os
 
 from setuptools import setup, find_packages
 
+# use pip to parse the requirements.txt files into lists.
+#from pip.req import parse_requirements
+#reqs = [str(i.req) for i in parse_requirements('requirements.txt',
+#                                               session=False)]
+#print('Reqs={}'.format(reqs))
+
 # here = os.path.abspath(os.path.dirname(__file__))
 # with open(os.path.join(here, 'README.txt')) as f:
 #     README = f.read()
@@ -13,12 +19,13 @@ requires = [
     'pyramid_chameleon',
     'pyramid_debugtoolbar',
     'waitress',
-    ]
+#    'git+ssh://git@stash.nasawestprime.com:7999/avail/avail.git@develop#egg=avail',
+]
 
 setup(name='PyraExceptions',
       version='0.0',
       description='PyraExceptions try exceptions as json',
-      #long_description=README + '\n\n' + CHANGES,
+      # long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pyramid",

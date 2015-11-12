@@ -6,9 +6,12 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPOk
 
+from avail.rest.jsonexceptions import JSONOk
+
+
 @view_config(route_name='root', renderer='json')
 def root(request):
-    return {'msg': 'Try /ok, /notsticky, /exception, or /headers'}
+    return {'msg': 'Try /ok, /notstickyhtml, /notstickyjson, /exception, /headers, /cache'}
 
 @view_config(route_name='ok', renderer='json', request_method='GET')
 def ok(request):
@@ -58,6 +61,20 @@ def cache(request):
     return HTTPOk(body=json.dumps({'msg': 'check headers Cache-Control, Expires'}),
                   content_type='application/json')
 
+@view_config(route_name='jsonokstr', renderer='json', request_method='GET')
+def jsonokstr(request):
+    return JSONOk("a string message, not payload=")
+
+@view_config(route_name='jsonokstr2', renderer='json', request_method='GET')
+def jsonokstr2(request):
+    JSONOk("I am not the return value! I am a bug.")
+    return JSONOk()             # BUG! returns the string above!
+
+@view_config(route_name='jsonokpayload', renderer='json', request_method='GET')
+def jsonokpayload(request):
+    JSONOk(payload={'msg': 'I am not the return value! I am a bug.'})
+    return JSONOk()             # Good: returns {}
+
 
 def main(global_config, **settings):
     """For pserve, offers --reload"""
@@ -69,6 +86,9 @@ def main(global_config, **settings):
     config.add_route('exception', '/exception')
     config.add_route('headers', '/headers')
     config.add_route('cache', '/cache')
+    config.add_route('jsonokstr', '/jsonokstr')
+    config.add_route('jsonokstr2', '/jsonokstr2')
+    config.add_route('jsonokpayload', '/jsonokpayload')
     config.scan()
     return config.make_wsgi_app()
 
